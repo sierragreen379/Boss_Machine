@@ -11,6 +11,16 @@ const {
     deleteFromDatabasebyId
 } = require('./db');
 
+ideasRouter.param('ideaId', (req, res, next, id) => {
+    const idea = getFromDatabaseById('ideas', id);
+    if (idea) {
+        req.idea = idea;
+        next();
+    } else {
+        res.status(404).send();
+    }
+});
+
 // GET /api/ideas to get an array of all ideas.
 ideasRouter.get('/', (req, res, next) => {
     const allIdeas = getAllFromDatabase('ideas');
@@ -19,13 +29,7 @@ ideasRouter.get('/', (req, res, next) => {
 
 // GET /api/ideas/:ideaId to get a single idea by id.
 ideasRouter.get('/:ideaId', (req, res, next) => {
-    const ideaId = req.params.ideaId;
-    const retreivedIdea = getFromDatabaseById('ideas', ideaId);
-    if (retreivedIdea) {
-        res.status(200).send(retreivedIdea);
-    } else {
-        res.status(404).send();
-    }
+    res.status(200).send(req.idea);
 });
 
 // POST /api/ideas to create a new idea and save it to the database.
@@ -41,7 +45,6 @@ ideasRouter.post('/', (req, res, next) => {
 
 // PUT /api/ideas/:ideaId to update a single idea by id.
 ideasRouter.put('/:ideaId', (req, res, next) => {
-    req.body.id = req.params.ideaId;
     const updatedIdea = updateInstanceInDatabase('ideas', req.body);
     if (updatedIdea) {
         res.status(200).send(updatedIdea);
