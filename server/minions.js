@@ -13,8 +13,8 @@ const {
 
 // GET /api/minions to get an array of all minions.
 minionsRouter.get('/', (req, res, next) => {
-    const arrayOfMinions = getAllFromDatabase('minions');
-    res.status(200).send(arrayOfMinions);
+    const allMinions = getAllFromDatabase('minions');
+    res.status(200).send(allMinions);
 });
 
 // GET /api/minions/:minionId to get a single minion by id.
@@ -23,7 +23,7 @@ minionsRouter.get('/:minionId', (req, res, next) => {
     if (retreivedMinion) {
         res.status(200).send(retreivedMinion);
     } else {
-        res.status(404).send("Choose a different id!");
+        res.status(404).send();
     }
 });
 
